@@ -1,0 +1,23 @@
+@startuml EduPules_Sequence_Alert
+' Implemented flow: frontend/src/pages/dean/DeanAlerts.tsx -> backend/app/api/analytics_extended.py
+actor Admin
+participant "React SPA" as SPA
+participant "FastAPI" as API
+database "PostgreSQL" as DB
+Admin -> SPA : 1. open Alerts page
+SPA -> API : 2. GET /api/v1/analytics/system-alerts (Bearer JWT)
+activate API
+API -> API : 3. verify JWT & staff role
+API -> DB : 4. rule queries (risk_assessments, students,\nattendances, intervention_plans, quiz_submissions)
+DB --> API : rows
+API --> SPA : 5. 200 alerts JSON
+deactivate API
+SPA --> Admin : 6. alert cards
+Admin -> SPA : 7. click "Send warning"
+SPA -> API : 8. POST /api/v1/analytics/alerts/{id}/send-warning
+activate API
+API -> DB : 9. INSERT notification (audit record for sender)
+API --> SPA : 10. success
+deactivate API
+note over API, DB : Delivery of the warning to the student is planned (not implemented).
+@enduml

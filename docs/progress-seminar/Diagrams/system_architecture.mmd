@@ -1,0 +1,31 @@
+%% EduPules — layered architecture (slide 12), derived from backend/main.py, frontend/vite.config.ts, app/core/config.py
+flowchart TB
+  subgraph L1["Client layer — React 19 + TypeScript SPA"]
+    p1["4 role areas (React Router 7)"]
+    p2["Charts (Recharts)"]
+    p3["AuthContext (JWT in localStorage)"]
+    p4["Sample-data modules (prototype pages)"]:::partial
+  end
+  subgraph L2["API & security layer — FastAPI"]
+    m1["Request logging"] --> m2["API-key check"] --> m3["CORS"]
+    r["Routers: auth · analytics · risk/ai · interventions · quizzes · notifications · admin panel · career roadmap"]
+    m3 --> r
+  end
+  subgraph L3["Intelligence layer"]
+    e["Risk engine v2 (in-process, explainable weighted scoring)"]:::partial
+    k["Alert rules & KPIs (SQL over tables and views)"]
+    c["Career service (prompt + JSON schema)"]
+  end
+  subgraph L4["Data layer"]
+    o["SQLAlchemy 2 ORM + SQL"] --> db[("PostgreSQL: 22 tables, 5 views, 2 materialized views")]
+  end
+  g["Google Gemini API (external)"]:::ext
+  L1 -- "HTTPS · REST /api/v1 · JSON · Bearer JWT" --> m1
+  r --> e
+  r --> k
+  r --> c
+  c -- "REST, key from .env" --> g
+  k --> o
+  r --> o
+  classDef partial fill:#FDF2E2,stroke:#C2700C,stroke-dasharray:4 3;
+  classDef ext fill:#F5F7FB,stroke:#64748B,stroke-dasharray:4 3;

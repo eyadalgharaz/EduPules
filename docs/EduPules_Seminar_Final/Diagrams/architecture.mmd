@@ -1,0 +1,16 @@
+%% EduPules — layered architecture (render at mermaid.live or with mmdc)
+flowchart TB
+  U["Users: Admin · Professor · Advisor · Student<br/>(web browser)"]
+  subgraph FE["Frontend — React 19 SPA (TypeScript, Vite, Tailwind, Recharts)"]
+    L["Role-based layouts & pages"] --- AC["AuthContext (JWT session)"] --- AP["API client lib/api.ts"]
+  end
+  subgraph BE["Backend — FastAPI on Uvicorn (single service)"]
+    MW["Middleware: CORS · logging · error→JSON"] --> RT["Routers: auth · analytics · admin-panel · students · courses · quizzes · interventions · risk · notifications · career-roadmap · ai"]
+    RT --> SV["Logic: auth & role guards · Risk Engine v2 · SQL alert rules · Gemini client"]
+  end
+  DB[("PostgreSQL — 22 tables, 5 views, 2 materialized views, triggers")]
+  G["Google Gemini API (gemini-2.5-flash)"]
+  U --> FE
+  FE -- "HTTP/JSON /api/v1 + Bearer JWT" --> BE
+  SV -- "SQLAlchemy 2.0 / psycopg2" --> DB
+  SV -- "HTTPS (httpx)" --> G

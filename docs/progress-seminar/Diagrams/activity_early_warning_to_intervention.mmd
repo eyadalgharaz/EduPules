@@ -1,0 +1,18 @@
+%% EduPules — activity diagram (slide 11): early warning to intervention. Lanes: System, Admin, Teaching Assistant.
+%% Solid = implemented end to end; dashed = API exists but not automated / UI uses sample data.
+flowchart TB
+  subgraph SYS["System (API + DB)"]
+    s0((start)) --> s1["Grades & attendance stored"] --> s2["Risk record exists (engine v2)"]:::partial --> s3["Alert rules: Critical/High risk, GPA < 2.0, attendance < 70%<br/>(GET /analytics/system-alerts)"]
+    s4["Create notification"]
+  end
+  subgraph ADM["Admin (Dean)"]
+    a1["Review AI Alert Center"] --> a2{"Act?"}
+  end
+  subgraph TA["Teaching Assistant"]
+    v1["Create intervention plan + ordered actions<br/>(POST /ai/interventions)"]:::partial --> v2["Status: pending → active → completed<br/>(PATCH /ai/interventions/{id}/status)"]:::partial --> v3["Student notified; progress reviewed"]:::partial --> v4((end))
+  end
+  s3 --> a1
+  a2 -- "yes · send warning<br/>(POST /analytics/alerts/{id}/send-warning)" --> s4
+  a2 -- "no" --> a3["Keep monitoring"]
+  s4 --> v1
+  classDef partial fill:#FDF2E2,stroke:#C2700C,stroke-dasharray:4 3;

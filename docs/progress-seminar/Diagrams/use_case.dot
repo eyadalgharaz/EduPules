@@ -1,0 +1,37 @@
+// EduPules - UML use case diagram (editable source, fixed layout). Four official roles only.
+// Render: neato -Tsvg use_case.dot -o use_case.svg   (actor.png must be in this folder)
+// Derived from frontend/src/App.tsx routes and backend role guards (admin, professor, ta, student).
+graph UseCase {
+  graph [splines=false, outputorder=nodesfirst, bgcolor="white", pad=0.1, fontname="Inter"];
+  node  [fontname="Inter", fontsize=13];
+  edge  [color="#64748B", penwidth=1.3];
+  SYS [shape=box, style="rounded", color="#4169E1", penwidth=2.2, width=9.4, height=5.6, pos="6.5,3.0!", label="EduPules", labelloc=t, fontsize=17, fontcolor="#101C35"];
+  node [shape=none, image="actor.png", imagescale=true, width=0.55, height=0.85, fixedsize=true, label=""];
+  Student   [pos="0.75,3.9!"];  L1 [shape=plaintext, image="", fixedsize=false, width=0.3, height=0.25, label="Student",            pos="0.75,3.25!", fontsize=14];
+  Professor [pos="0.75,1.4!"];  L2 [shape=plaintext, image="", fixedsize=false, width=0.3, height=0.25, label="Professor",          pos="0.75,0.75!", fontsize=14];
+  Admin     [pos="12.25,3.9!"]; L3 [shape=plaintext, image="", fixedsize=false, width=0.3, height=0.25, label="Admin",              pos="12.25,3.25!", fontsize=14];
+  TA        [pos="12.25,1.4!"]; L4 [shape=plaintext, image="", fixedsize=false, width=0.3, height=0.25, label="Teaching Assistant", pos="12.25,0.75!", fontsize=14];
+  Gemini [shape=box, image="", style="rounded,filled", fillcolor="#F5F7FB", color="#64748B", fixedsize=false, width=1.5, height=0.55, label="«external system»\nGoogle Gemini API", fontsize=11, pos="0.85,5.35!"];
+  node [shape=ellipse, image="", style=filled, fillcolor="#EEF2FD", color="#4169E1", fixedsize=true, width=3.0, height=0.55, fontsize=13];
+  UC1 [label="Generate career roadmap",            pos="3.9,5.1!"];
+  UC2 [label="View risk dashboard",                pos="3.9,4.4!"];
+  UC3 [label="Run what-if simulation",             pos="3.9,3.7!"];
+  UC4 [label="Take quiz",                          pos="3.9,3.0!"];
+  UC5 [label="Build & publish quiz",               pos="3.9,2.1!"];
+  UC6 [label="View course risk heatmap",           pos="3.9,1.4!"];
+  UC7 [label="Record attendance\n& grades",        pos="6.5,0.65!", width=2.6];
+  UL  [label="Log in\n(JWT session)",              pos="6.5,3.55!", width=1.9, fillcolor="#E3F6F4", color="#20B8A8"];
+  UC8 [label="Monitor college KPIs",               pos="9.1,5.1!"];
+  UC9 [label="Review alerts\n& send warning",      pos="9.1,4.4!"];
+  UC10 [label="Oversee interventions",             pos="9.1,3.7!"];
+  UC11 [label="Manage records\n(data panel)",      pos="9.1,3.0!"];
+  UC12 [label="Track students",                    pos="9.1,2.1!"];
+  UC13 [label="Manage intervention plans",         pos="8.55,1.4!"];
+  Student -- UC1; Student -- UC2; Student -- UC3; Student -- UC4;
+  UC1 -- Gemini [style=dashed];
+  Professor -- UC5; Professor -- UC6; Professor -- UC7;
+  Admin -- UC8; Admin -- UC9; Admin -- UC10; Admin -- UC11;
+  TA -- UC12; TA -- UC13; TA -- UC7;
+  UC2 -- UL [style=dashed, color="#20B8A8", dir=forward, arrowhead=open, label="«include»", fontsize=10, fontcolor="#1A9E90"];
+  UC9 -- UL [style=dashed, color="#20B8A8", dir=forward, arrowhead=open, label="«include»", fontsize=10, fontcolor="#1A9E90"];
+}

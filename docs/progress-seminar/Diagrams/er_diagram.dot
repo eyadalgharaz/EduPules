@@ -1,0 +1,56 @@
+// EduPules - core ER diagram, derived from database/001_schema.sql (13 of 22 tables)
+// Render: dot -Tsvg er_diagram.dot -o er_diagram.svg   (font: Inter)
+// PK = primary key, FK = foreign key. Cardinality labels: 1, 0..1, N.
+// Shown for the four official roles: users -> students / professors / teaching_assistants.
+// Omitted for readability: personal_access_tokens, course_sections, announcements, quizzes,
+// questions, quiz_submissions, activity_logs, audit_logs, and the legacy role-profile table
+// scheduled for removal with the four-role model (see Project_Audit.md, section 3).
+digraph ER {
+  graph [rankdir=LR, splines=ortho, nodesep=0.35, ranksep=0.8, bgcolor="white", pad=0.2, fontname="Inter"];
+  node  [shape=plain, fontname="Inter", fontsize=12];
+  edge  [color="#64748B", penwidth=1.5, dir=none, fontname="Inter SemiBold", fontsize=12, fontcolor="#4169E1", labeldistance=1.5, labelangle=30];
+  users [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#101C35">
+    <tr><td bgcolor="#101C35"><font color="white" point-size="13"><b>users</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">email (unique)</font></td></tr><tr><td align="left" balign="left"><font color="#334155">hashed_password</font></td></tr><tr><td align="left" balign="left"><font color="#334155">role (enum: 4 roles)</font></td></tr></table>>];
+  departments [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#101C35">
+    <tr><td bgcolor="#101C35"><font color="white" point-size="13"><b>departments</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">name, code</font></td></tr></table>>];
+  students [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#4169E1">
+    <tr><td bgcolor="#4169E1"><font color="white" point-size="13"><b>students</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK user_id (unique)</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK department_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">student_number, gpa, year</font></td></tr></table>>];
+  professors [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#4169E1">
+    <tr><td bgcolor="#4169E1"><font color="white" point-size="13"><b>professors</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK user_id (unique)</font></td></tr><tr><td align="left" balign="left"><font color="#334155">title</font></td></tr></table>>];
+  teaching_assistants [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#4169E1">
+    <tr><td bgcolor="#4169E1"><font color="white" point-size="13"><b>teaching_assistants</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK user_id (unique)</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK professor_id</font></td></tr></table>>];
+  courses [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#4169E1">
+    <tr><td bgcolor="#4169E1"><font color="white" point-size="13"><b>courses</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">code (unique), name</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK professor_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK department_id</font></td></tr></table>>];
+  enrollments [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#1A9E90">
+    <tr><td bgcolor="#1A9E90"><font color="white" point-size="13"><b>enrollments</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK student_id, FK course_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">UNIQUE(student_id, course_id)</font></td></tr><tr><td align="left" balign="left"><font color="#334155">grade, status</font></td></tr></table>>];
+  attendances [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#1A9E90">
+    <tr><td bgcolor="#1A9E90"><font color="white" point-size="13"><b>attendances</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK student_id, FK course_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">date, status (enum)</font></td></tr></table>>];
+  grade_records [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#1A9E90">
+    <tr><td bgcolor="#1A9E90"><font color="white" point-size="13"><b>grade_records</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK student_id, FK course_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">score, max_score, weight</font></td></tr></table>>];
+  risk_assessments [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#C2700C">
+    <tr><td bgcolor="#C2700C"><font color="white" point-size="13"><b>risk_assessments</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK student_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">risk_level (enum)</font></td></tr><tr><td align="left" balign="left"><font color="#334155">probability, model_version</font></td></tr></table>>];
+  intervention_plans [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#C2700C">
+    <tr><td bgcolor="#C2700C"><font color="white" point-size="13"><b>intervention_plans</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK student_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">status, priority, deadline</font></td></tr></table>>];
+  intervention_actions [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#C2700C">
+    <tr><td bgcolor="#C2700C"><font color="white" point-size="13"><b>intervention_actions</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK plan_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">completed, order_index</font></td></tr></table>>];
+  notifications [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="white" color="#C2700C">
+    <tr><td bgcolor="#C2700C"><font color="white" point-size="13"><b>notifications</b></font></td></tr><tr><td align="left" balign="left"><font color="#101C35">PK id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">FK user_id</font></td></tr><tr><td align="left" balign="left"><font color="#334155">type (enum), read</font></td></tr></table>>];
+
+  users -> students [taillabel="1", headlabel="0..1"];
+  users -> professors [taillabel="1", headlabel="0..1"];
+  users -> teaching_assistants [taillabel="1", headlabel="0..1"];
+  users -> notifications [taillabel="1", headlabel="N"];
+  departments -> students [taillabel="0..1", headlabel="N"];
+  departments -> courses [taillabel="0..1", headlabel="N"];
+  professors -> courses [taillabel="0..1", headlabel="N"];
+  professors -> teaching_assistants [taillabel="0..1", headlabel="N"];
+  students -> enrollments [taillabel="1", headlabel="N"];
+  courses -> enrollments [taillabel="1", headlabel="N"];
+  students -> attendances [taillabel="1", headlabel="N"];
+  courses -> attendances [taillabel="1", headlabel="N"];
+  students -> grade_records [taillabel="1", headlabel="N"];
+  courses -> grade_records [taillabel="1", headlabel="N"];
+  students -> risk_assessments [taillabel="1", headlabel="N"];
+  students -> intervention_plans [taillabel="1", headlabel="N"];
+  intervention_plans -> intervention_actions [taillabel="1", headlabel="N"];
+}

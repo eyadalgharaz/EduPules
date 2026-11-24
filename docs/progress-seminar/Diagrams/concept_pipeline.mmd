@@ -1,0 +1,10 @@
+%% EduPules — concept pipeline (slide 7). Render with Mermaid (mermaid.live or mmdc).
+flowchart LR
+  A["Academic data<br/>(PostgreSQL: grades, attendance,<br/>enrollments, quizzes)"] --> B["Analytics<br/>(KPIs and trends per role)"]
+  B --> C["Risk assessment<br/>(engine v2: score 0–100,<br/>4 levels, drivers, what-if)"]
+  C --> D["Early warning<br/>(Critical/High risk, GPA &lt; 2.0,<br/>attendance &lt; 70%)"]
+  D --> E["Intervention<br/>(plan + ordered actions)"]
+  E --> F["Monitoring<br/>(pending→active→completed,<br/>notifications)"]
+  classDef done fill:#E6F6EE,stroke:#15935F;
+  classDef partial fill:#FDF2E2,stroke:#C2700C,stroke-dasharray:4 3;
+  class A,B,C,D done; class E,F partial;

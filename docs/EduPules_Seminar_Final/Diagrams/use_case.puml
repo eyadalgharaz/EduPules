@@ -1,0 +1,47 @@
+@startuml EduPules_UseCase
+' EduPules — General Use Case Diagram (editable source; render with PlantUML)
+left to right direction
+skinparam actorStyle awesome
+actor Admin
+actor Professor
+actor Advisor
+actor Student
+actor "Gemini API" as Gemini <<external system>>
+rectangle "EduPules System" {
+  usecase "Log in (JWT)" as UC_Login
+  usecase "Monitor institution dashboard" as UC_Dash
+  usecase "Review early-warning alerts" as UC_Alerts
+  usecase "Send warning / notify instructor" as UC_Warn
+  usecase "Manage records (Data Panel)" as UC_Data
+  usecase "Manage courses & quizzes" as UC_Courses
+  usecase "View course risk heatmap" as UC_Heat
+  usecase "Manage course Advisors" as UC_Adv
+  usecase "Record attendance & grades" as UC_Att
+  usecase "Track at-risk students" as UC_Track
+  usecase "Manage intervention plans" as UC_Plans
+  usecase "View risk assessment" as UC_Risk
+  usecase "Simulate grades (what-if)" as UC_Sim
+  usecase "Generate career roadmap" as UC_Career
+  usecase "Compute risk score" as UC_Score
+}
+Admin --> UC_Login
+Professor --> UC_Login
+Advisor --> UC_Login
+Student --> UC_Login
+Admin --> UC_Dash
+Admin --> UC_Alerts
+Admin --> UC_Data
+Professor --> UC_Courses
+Professor --> UC_Heat
+Professor --> UC_Adv
+Advisor --> UC_Att
+Advisor --> UC_Track
+Advisor --> UC_Plans
+Student --> UC_Risk
+Student --> UC_Sim
+Student --> UC_Career
+UC_Career --> Gemini
+UC_Warn .> UC_Alerts : <<extend>>
+UC_Heat .> UC_Score : <<include>>
+UC_Risk .> UC_Score : <<include>>
+@enduml

@@ -1,0 +1,40 @@
+@startuml EduPules_Class_RiskEngine
+' Source: backend/app/ai/risk_model_v2.py
+class RiskFeatures <<dataclass>> {
+  gpa: float
+  attendance_rate: float
+  assignment_completion: float
+  quiz_average: float
+  platform_activity_score: float
+  login_frequency: float
+  time_on_platform_minutes: float
+  interaction_level: float
+  consecutive_absences: int
+  grade_trend: float
+}
+class RiskPredictionModelV2 {
+  WEIGHTS: gpa .28, attendance .22, assignments .14, quizzes .10,\n activity .09, login .06, time .05, interaction .03, grade_trend .03
+  THRESHOLDS: Normal <25, Low <50, High <75, Critical >=75
+  + predict(f: RiskFeatures): RiskPrediction
+  + simulate(f, changes): dict
+  - _explain()
+  - _recommend()
+  - _feature_contributions()
+}
+class RiskPrediction <<dataclass>> {
+  risk_level: str
+  probability: float
+  grades_impact / attendance_impact / activity_impact
+  dropout_probability, graduation_delay_likelihood
+  scholarship_eligibility
+  trend, explanation
+  recommendations: List[str]
+  confidence: float
+}
+class BatchRiskProcessor {
+  + process(students_features): List[dict]
+}
+RiskPredictionModelV2 ..> RiskFeatures : <<use>>
+RiskPredictionModelV2 ..> RiskPrediction : <<create>>
+BatchRiskProcessor --> RiskPredictionModelV2
+@enduml
